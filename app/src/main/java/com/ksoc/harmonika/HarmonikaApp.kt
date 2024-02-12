@@ -36,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -63,7 +64,7 @@ fun AppContent() {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.DarkGray) // Adjust background color as needed,
+            .background(Color.White) // Adjust background color as needed,
             .padding(horizontal = 16.dp)
     ) {
         Row(
@@ -75,13 +76,13 @@ fun AppContent() {
                 text = "Harmonika",
                 style = TextStyle(
                     fontSize = 24.sp,
-                    color = Color.White
                 ),
             )
             Image(
                 painter = painterResource(id = R.drawable.ic_launcher_foreground),
                 contentDescription = null,
-                modifier = Modifier.size(90.dp)
+                modifier = Modifier.size(90.dp),
+                colorFilter = ColorFilter.tint(Color.Red)
             )
         }
         Spacer(modifier = Modifier.padding(top = 50.dp))
@@ -94,7 +95,6 @@ fun AppContent() {
                 textAlign = TextAlign.Center, // Align text to the center
                 style = TextStyle(
                     fontSize = 24.sp,
-                    color = Color.White
                 )
             )
         }
@@ -125,7 +125,7 @@ fun MediaDropdown() {
                     Icon(Icons.Filled.ArrowDropDown, contentDescription = "Expand menu")
                 }
             },
-            modifier = Modifier.fillMaxWidth().background(color = Color.White)
+            modifier = Modifier.fillMaxWidth().background(color = Color.LightGray)
         )
         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             choices.forEach { choice ->
@@ -155,12 +155,12 @@ fun SearchComponent(
             value = searchText,
             onValueChange = onSearchTextChanged,
             placeholder = { Text("Enter search term") },
-            modifier = Modifier.background(color = Color.White).fillMaxWidth()
+            modifier = Modifier.background(color = Color.LightGray).fillMaxWidth()
         )
         Spacer(modifier = Modifier.padding(top = 30.dp))
         Button(
             onClick = onSearchButtonClick,
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray),
             elevation = ButtonDefaults.elevation(defaultElevation = 0.dp)
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {

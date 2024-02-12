@@ -70,11 +70,11 @@ dependencies {
     // ViewModel and LiveData
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
     implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
+    implementation("androidx.appcompat:appcompat:1.6.1")
 
     // Dependency Injection with Dagger or Hilt
-    implementation("com.google.dagger:hilt-android:2.40")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    kapt("com.google.dagger:hilt-android-compiler:2.40")
+    implementation("com.google.dagger:hilt-android:2.50")
+    kapt("com.google.dagger:hilt-android-compiler:2.50")
     implementation("androidx.hilt:hilt-common:1.1.0")
     kapt("androidx.hilt:hilt-compiler:1.1.0")
 
@@ -87,3 +87,4 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 }
+

@@ -5,7 +5,6 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,16 +17,18 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ExposedDropdownMenuBox
+import androidx.compose.material.ExposedDropdownMenuDefaults
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -76,10 +77,7 @@ fun AppContent() {
         Spacer(modifier = Modifier.padding(top = 30.dp))
         SearchOutlinedTextField(
             searchText = searchTextState.value,
-            onSearchTextChanged = { newText ->
-                // Update the state with the new text
-                searchTextState.value = newText
-            })
+            onSearchTextChanged = { newText -> searchTextState.value = newText })
         Spacer(modifier = Modifier.padding(top = 30.dp))
         SearchButton()
     }
@@ -106,28 +104,37 @@ fun HomeTitleAndLogo() {
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MediaDropdown() {
     var expanded by remember { mutableStateOf(false) }
-    val choices = listOf("Albums", "Songs", "Artists")
+    val choices = listOf("Songs", "Artists", "Albums")
     var selectedChoice by remember { mutableStateOf(choices[0]) }
 
-    Box(
-        modifier = Modifier
-            .padding(horizontal = 35.dp) // Add horizontal padding
+    ExposedDropdownMenuBox(
+        modifier = Modifier.padding(horizontal = 35.dp), // Add horizontal padding
+        expanded = expanded,
+        onExpandedChange = {
+            expanded = !expanded
+        }
     ) {
-        OutlinedTextField(
-            value = selectedChoice,
-            onValueChange = { selectedChoice = it },
+        TextField(
             readOnly = true,
+            value = selectedChoice,
+            onValueChange = { },
             trailingIcon = {
-                IconButton(onClick = { expanded = !expanded }) {
-                    Icon(Icons.Filled.ArrowDropDown, contentDescription = "Expand menu")
-                }
+                ExposedDropdownMenuDefaults.TrailingIcon(
+                    expanded = expanded
+                )
             },
-            modifier = Modifier.fillMaxWidth().background(color = Color.LightGray)
+            colors = ExposedDropdownMenuDefaults.textFieldColors()
         )
-        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = {
+                expanded = false
+            }
+        ) {
             choices.forEach { choice ->
                 DropdownMenuItem(onClick = {
                     selectedChoice = choice
@@ -148,7 +155,7 @@ fun SearchOutlinedTextField(
     val focusManager = LocalFocusManager.current
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 35.dp) // Fill the entire width of the screen
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 40.dp) // Fill the entire width of the screen
     ){
         OutlinedTextField(
             value = searchText,
@@ -157,7 +164,7 @@ fun SearchOutlinedTextField(
             },
             placeholder = { Text("Enter your search") },
             singleLine = true, // Set the singleLine modifier to true
-            modifier = Modifier.background(color = Color.LightGray).fillMaxWidth(),
+            modifier = Modifier.background(color =  MaterialTheme.colors.onSurface.copy(alpha = TextFieldDefaults.BackgroundOpacity)).fillMaxWidth(),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done), // Set imeAction to Done
             keyboardActions = KeyboardActions(
                 onDone = { focusManager.clearFocus() } // Call onSearchDone when "Done" action is triggered
@@ -187,13 +194,3 @@ fun SearchButton() {
 fun Preview_AppContent() {
     AppContent()
 }
-
-/*
-        // Background Image
-//        Image(
-//            painter = painterResource(id = R.drawable.ic_launcher_foreground), // Replace with your background image
-//            contentDescription = null, // Provide a meaningful content description
-//            modifier = Modifier.fillMaxSize(),
-//            contentScale = ContentScale.Crop // Adjust content scale as needed
-//        )
-* */

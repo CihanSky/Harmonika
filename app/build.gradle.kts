@@ -57,6 +57,8 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material:material:1.6.1")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.28.0")
+
 
     //Retrofit and Gson dependencies
     implementation("com.squareup.retrofit2:retrofit:2.9.0")

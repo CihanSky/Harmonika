@@ -11,10 +11,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.DropdownMenu
@@ -36,10 +37,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -55,11 +56,13 @@ class HarmonikaApp : AppCompatActivity() {
                 }
             }
         }
+
     }
 }
 
 @Composable
 fun AppContent() {
+    val searchTextState = remember { mutableStateOf("") }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -67,44 +70,41 @@ fun AppContent() {
             .background(Color.White) // Adjust background color as needed,
             .padding(horizontal = 16.dp)
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .padding(top = 75.dp)
-        ) {
-            Text(
-                text = "Harmonika",
-                style = TextStyle(
-                    fontSize = 24.sp,
-                ),
-            )
-            Image(
-                painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                contentDescription = null,
-                modifier = Modifier.size(90.dp),
-                colorFilter = ColorFilter.tint(Color.Red)
-            )
-        }
-        Spacer(modifier = Modifier.padding(top = 50.dp))
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-        ) {
-            Text(
-                text = "Search your favorite \nSong, Artist or Album!",
-                textAlign = TextAlign.Center, // Align text to the center
-                style = TextStyle(
-                    fontSize = 24.sp,
-                )
-            )
-        }
+        HomeTitleAndLogo()
         Spacer(modifier = Modifier.padding(top = 50.dp))
         MediaDropdown()
         Spacer(modifier = Modifier.padding(top = 30.dp))
-        SearchComponent(searchText = "MJ", onSearchTextChanged = {}, onSearchButtonClick = {})
+        SearchOutlinedTextField(
+            searchText = searchTextState.value,
+            onSearchTextChanged = { newText ->
+                // Update the state with the new text
+                searchTextState.value = newText
+            })
+        Spacer(modifier = Modifier.padding(top = 30.dp))
+        SearchButton()
     }
 }
 
+@Composable
+fun HomeTitleAndLogo() {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .padding(top = 75.dp)
+    ) {
+        Text(
+            text = "Search your favorite \nSong, Artist or Album!",
+            style = TextStyle(
+                fontSize = 22.sp,
+            ),
+        )
+        Image(
+            painter = painterResource(id = R.drawable.baseline_music_note_24),
+            contentDescription = null,
+            modifier = Modifier.size(50.dp),
+        )
+    }
+}
 
 @Composable
 fun MediaDropdown() {
@@ -141,33 +141,42 @@ fun MediaDropdown() {
 }
 
 @Composable
-fun SearchComponent(
+fun SearchOutlinedTextField(
     searchText: String,
     onSearchTextChanged: (String) -> Unit,
-    onSearchButtonClick: () -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth().padding(horizontal = 35.dp) // Fill the entire width of the screen
-            .imePadding()
     ){
         OutlinedTextField(
             value = searchText,
-            onValueChange = onSearchTextChanged,
-            placeholder = { Text("Enter search term") },
-            modifier = Modifier.background(color = Color.LightGray).fillMaxWidth()
+            onValueChange = { newSearchText ->
+                onSearchTextChanged(newSearchText) // Call the provided function with the new search text
+            },
+            placeholder = { Text("Enter your search") },
+            singleLine = true, // Set the singleLine modifier to true
+            modifier = Modifier.background(color = Color.LightGray).fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done), // Set imeAction to Done
+            keyboardActions = KeyboardActions(
+                onDone = { focusManager.clearFocus() } // Call onSearchDone when "Done" action is triggered
+            )
         )
-        Spacer(modifier = Modifier.padding(top = 30.dp))
-        Button(
-            onClick = onSearchButtonClick,
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray),
-            elevation = ButtonDefaults.elevation(defaultElevation = 0.dp)
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Filled.Search, contentDescription = "Search")
-                Spacer(modifier = Modifier.width(4.dp)) // Add some spacing between icon and text
-                Text(text = "Search")
-            }
+    }
+}
+
+@Composable
+fun SearchButton() {
+    Button(
+        onClick = {},
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray),
+        elevation = ButtonDefaults.elevation(defaultElevation = 0.dp)
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(Icons.Filled.Search, contentDescription = "Search")
+            Spacer(modifier = Modifier.width(4.dp)) // Add some spacing between icon and text
+            Text(text = "Search")
         }
     }
 }

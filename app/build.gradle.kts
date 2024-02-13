@@ -59,7 +59,6 @@ dependencies {
     implementation("androidx.compose.material:material:1.6.1")
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.28.0")
 
-
     //Retrofit and Gson dependencies
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")

@@ -1,5 +1,6 @@
 package com.ksoc.harmonika
 
+import TrackItem
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -36,6 +38,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,6 +52,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ksoc.harmonika.ui.theme.HarmonikaTheme
+import kotlinx.coroutines.launch
+import searchSongs
 
 class HarmonikaApp : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -204,8 +209,18 @@ fun SearchOutlinedTextField(
 
 @Composable
 fun SearchButton() {
+    val scope = rememberCoroutineScope()
+    var searchResults by remember { mutableStateOf<List<TrackItem>?>(null) }
+    val searchText = "Yesterday"
+
     Button(
-        onClick = {},
+        onClick = {
+            scope.launch {
+                searchSongs(searchText)?.let { results ->
+                    searchResults = results
+                }
+            }
+        },
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray),
         elevation = ButtonDefaults.elevation(defaultElevation = 0.dp)
     ) {
@@ -213,6 +228,20 @@ fun SearchButton() {
             Icon(Icons.Filled.Search, contentDescription = "Search")
             Spacer(modifier = Modifier.width(4.dp)) // Add some spacing between icon and text
             Text(text = "Search")
+        }
+    }
+
+    searchResults?.let { results ->
+        if (results.isNotEmpty()) {
+            Column {
+                Text("Search Results:")
+                Spacer(modifier = Modifier.height(8.dp))
+                results.forEach { track ->
+                    Text("${track.name} by ${track.artists.joinToString(", ") { it.name }}")
+                }
+            }
+        } else {
+            Text("No results found")
         }
     }
 }

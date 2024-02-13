@@ -1,10 +1,12 @@
 package com.ksoc.harmonika
 
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -37,6 +39,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -50,38 +53,54 @@ import com.ksoc.harmonika.ui.theme.HarmonikaTheme
 class HarmonikaApp : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.setBackgroundDrawable(ColorDrawable(
+            getColor(R.color.custom_purple))
+        ) // Change the color as needed
+
         setContent {
             HarmonikaTheme {
-                Surface(color = MaterialTheme.colors.background) {
+                 Surface {
                     AppContent()
                 }
             }
         }
-
     }
 }
 
 @Composable
 fun AppContent() {
     val searchTextState = remember { mutableStateOf("") }
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White) // Adjust background color as needed,
-            .padding(horizontal = 16.dp)
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Color(0xFF9561a1),
+                        Color(0xFF122259)
+                    )
+                )
+            )
     ) {
-        HomeTitleAndLogo()
-        Spacer(modifier = Modifier.padding(top = 50.dp))
-        MediaDropdown()
-        Spacer(modifier = Modifier.padding(top = 30.dp))
-        SearchOutlinedTextField(
-            searchText = searchTextState.value,
-            onSearchTextChanged = { newText -> searchTextState.value = newText })
-        Spacer(modifier = Modifier.padding(top = 30.dp))
-        SearchButton()
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp)
+        ) {
+            HomeTitleAndLogo()
+            Spacer(modifier = Modifier.padding(top = 50.dp))
+            MediaDropdown()
+            Spacer(modifier = Modifier.padding(top = 30.dp))
+            SearchOutlinedTextField(
+                searchText = searchTextState.value,
+                onSearchTextChanged = { newText -> searchTextState.value = newText })
+            Spacer(modifier = Modifier.padding(top = 30.dp))
+            SearchButton()
+        }
     }
 }
+
 
 @Composable
 fun HomeTitleAndLogo() {
@@ -95,11 +114,13 @@ fun HomeTitleAndLogo() {
             style = TextStyle(
                 fontSize = 22.sp,
             ),
+            color = Color.White
         )
         Image(
             painter = painterResource(id = R.drawable.baseline_music_note_24),
             contentDescription = null,
             modifier = Modifier.size(50.dp),
+//            colorFilter = ColorFilter.tint(Color(0xFF122259))
         )
     }
 }
@@ -127,6 +148,7 @@ fun MediaDropdown() {
                     expanded = expanded
                 )
             },
+            textStyle = TextStyle(color = Color.White),
             colors = ExposedDropdownMenuDefaults.textFieldColors()
         )
         ExposedDropdownMenu(
@@ -155,20 +177,27 @@ fun SearchOutlinedTextField(
     val focusManager = LocalFocusManager.current
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 40.dp) // Fill the entire width of the screen
-    ){
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 40.dp) // Fill the entire width of the screen
+    ) {
         OutlinedTextField(
             value = searchText,
             onValueChange = { newSearchText ->
                 onSearchTextChanged(newSearchText) // Call the provided function with the new search text
             },
-            placeholder = { Text("Enter your search") },
+            placeholder = {
+                Text("Enter your search",
+                style = TextStyle(color = Color.White)) // Set the placeholder text color to white
+            },
             singleLine = true, // Set the singleLine modifier to true
-            modifier = Modifier.background(color =  MaterialTheme.colors.onSurface.copy(alpha = TextFieldDefaults.BackgroundOpacity)).fillMaxWidth(),
+            modifier = Modifier
+                .background(color = MaterialTheme.colors.onSurface.copy(alpha = TextFieldDefaults.BackgroundOpacity))
+                .fillMaxWidth(),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done), // Set imeAction to Done
             keyboardActions = KeyboardActions(
                 onDone = { focusManager.clearFocus() } // Call onSearchDone when "Done" action is triggered
-            )
+            ),
         )
     }
 }

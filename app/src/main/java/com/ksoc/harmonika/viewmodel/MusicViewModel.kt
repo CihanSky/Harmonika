@@ -1,19 +1,33 @@
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ksoc.harmonika.data.MusicRepository
-import com.ksoc.harmonika.data.SearchResult
+import com.ksoc.harmonika.data.TrackItem
 import kotlinx.coroutines.launch
 
-class MusicViewModel(private val repository: MusicRepository) : ViewModel() {
-    private val _searchResult = MutableLiveData<SearchResult>()
-    val searchResult: LiveData<SearchResult> = _searchResult
+class MusicViewModel : ViewModel() {
+    private val trackRepository = MusicRepository()
 
-    fun searchSongs(query: String) {
+//    private val _searchResults = MutableLiveData<List<TrackItem>?>()
+//    val searchResults: LiveData<List<TrackItem>?> = _searchResults
+//
+//    fun searchTracks(query: String) {
+//        CoroutineScope(Dispatchers.IO).launch {
+//            val tracks = trackRepository.searchSongs(query) ?: listOf()
+//            _searchResults.postValue(tracks)
+//        }
+//    }
+
+    var searchResults by mutableStateOf<List<TrackItem>?>(null)
+        private set
+
+    fun searchTracks(query: String) {
         viewModelScope.launch {
-            val result = repository.searchSongs(query)
-            _searchResult.postValue(result)
+            val tracks = trackRepository.searchSongs(query) ?: listOf()
+            searchResults = tracks
         }
     }
 }

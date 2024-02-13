@@ -1,6 +1,6 @@
 package com.ksoc.harmonika
 
-import TrackItem
+import MusicViewModel
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -38,7 +38,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,21 +50,25 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModelProvider
 import com.ksoc.harmonika.ui.theme.HarmonikaTheme
-import kotlinx.coroutines.launch
-import searchSongs
 
 class HarmonikaApp : AppCompatActivity() {
+
+    private lateinit var musicViewModel: MusicViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        supportActionBar?.setBackgroundDrawable(ColorDrawable(
-            getColor(R.color.custom_purple))
+        supportActionBar?.setBackgroundDrawable(
+            ColorDrawable(
+                getColor(R.color.custom_purple)
+            )
         ) // Change the color as needed
 
+        musicViewModel = ViewModelProvider(this)[MusicViewModel::class.java]
         setContent {
             HarmonikaTheme {
-                 Surface {
-                    AppContent()
+                Surface {
+                    AppContent(musicViewModel = musicViewModel)
                 }
             }
         }
@@ -73,7 +76,7 @@ class HarmonikaApp : AppCompatActivity() {
 }
 
 @Composable
-fun AppContent() {
+fun AppContent(musicViewModel: MusicViewModel) {
     val searchTextState = remember { mutableStateOf("") }
     Box(
         modifier = Modifier
@@ -101,7 +104,7 @@ fun AppContent() {
                 searchText = searchTextState.value,
                 onSearchTextChanged = { newText -> searchTextState.value = newText })
             Spacer(modifier = Modifier.padding(top = 30.dp))
-            SearchButton()
+            SearchButton(musicViewModel)
         }
     }
 }
@@ -192,8 +195,10 @@ fun SearchOutlinedTextField(
                 onSearchTextChanged(newSearchText) // Call the provided function with the new search text
             },
             placeholder = {
-                Text("Enter your search",
-                style = TextStyle(color = Color.White)) // Set the placeholder text color to white
+                Text(
+                    "Enter your search",
+                    style = TextStyle(color = Color.White)
+                ) // Set the placeholder text color to white
             },
             singleLine = true, // Set the singleLine modifier to true
             modifier = Modifier
@@ -208,18 +213,14 @@ fun SearchOutlinedTextField(
 }
 
 @Composable
-fun SearchButton() {
-    val scope = rememberCoroutineScope()
-    var searchResults by remember { mutableStateOf<List<TrackItem>?>(null) }
+fun SearchButton(musicViewModel: MusicViewModel) {
+//    val scope = rememberCoroutineScope()
+//    var searchResults by remember { mutableStateOf<List<TrackItem>?>(null) }
     val searchText = "Yesterday"
 
     Button(
         onClick = {
-            scope.launch {
-                searchSongs(searchText)?.let { results ->
-                    searchResults = results
-                }
-            }
+            musicViewModel.searchTracks(searchText)
         },
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray),
         elevation = ButtonDefaults.elevation(defaultElevation = 0.dp)
@@ -231,7 +232,7 @@ fun SearchButton() {
         }
     }
 
-    searchResults?.let { results ->
+    musicViewModel.searchResults?.let { results ->
         if (results.isNotEmpty()) {
             Column {
                 Text("Search Results:")
@@ -246,9 +247,9 @@ fun SearchButton() {
     }
 }
 
-
 @Preview
 @Composable
 fun Preview_AppContent() {
-    AppContent()
+    val musicViewModel = remember { MusicViewModel() } // Create an instance of MusicViewModel
+    AppContent(musicViewModel)
 }

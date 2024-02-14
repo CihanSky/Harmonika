@@ -7,7 +7,6 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -28,7 +27,6 @@ import androidx.compose.material.ExposedDropdownMenuDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
@@ -41,7 +39,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -62,14 +59,11 @@ class HarmonikaApp : AppCompatActivity() {
             ColorDrawable(
                 getColor(R.color.custom_purple)
             )
-        ) // Change the color as needed
-
+        )
         musicViewModel = ViewModelProvider(this)[MusicViewModel::class.java]
         setContent {
             HarmonikaTheme {
-                Surface {
-                    AppContent(musicViewModel = musicViewModel)
-                }
+                AppContent(musicViewModel = musicViewModel)
             }
         }
     }
@@ -78,34 +72,22 @@ class HarmonikaApp : AppCompatActivity() {
 @Composable
 fun AppContent(musicViewModel: MusicViewModel) {
     val searchTextState = remember { mutableStateOf("") }
-    Box(
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFF9561a1),
-                        Color(0xFF122259)
-                    )
-                )
-            )
+            .padding(horizontal = 16.dp)
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp)
-        ) {
-            HomeTitleAndLogo()
-            Spacer(modifier = Modifier.padding(top = 50.dp))
-            MediaDropdown()
-            Spacer(modifier = Modifier.padding(top = 30.dp))
-            SearchOutlinedTextField(
-                searchText = searchTextState.value,
-                onSearchTextChanged = { newText -> searchTextState.value = newText })
-            Spacer(modifier = Modifier.padding(top = 30.dp))
-            SearchButton(musicViewModel)
-        }
+        HomeTitleAndLogo()
+        Spacer(modifier = Modifier.padding(top = 50.dp))
+        MediaDropdown()
+        Spacer(modifier = Modifier.padding(top = 30.dp))
+        SearchOutlinedTextField(
+            searchText = searchTextState.value,
+            onSearchTextChanged = { newText -> searchTextState.value = newText })
+        Spacer(modifier = Modifier.padding(top = 30.dp))
+        SearchButton(musicViewModel)
     }
 }
 
@@ -250,6 +232,8 @@ fun SearchButton(musicViewModel: MusicViewModel) {
 @Preview
 @Composable
 fun Preview_AppContent() {
-    val musicViewModel = remember { MusicViewModel() } // Create an instance of MusicViewModel
-    AppContent(musicViewModel)
+    HarmonikaTheme {
+        val musicViewModel = remember { MusicViewModel() } // Create an instance of MusicViewModel
+        AppContent(musicViewModel)
+    }
 }

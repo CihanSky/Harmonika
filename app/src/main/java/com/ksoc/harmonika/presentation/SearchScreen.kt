@@ -1,4 +1,4 @@
-package com.ksoc.harmonika.ui.theme
+package com.ksoc.harmonika.presentation
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Button

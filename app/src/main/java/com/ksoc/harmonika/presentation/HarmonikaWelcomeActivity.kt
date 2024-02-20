@@ -51,9 +51,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.ksoc.harmonika.R
 import com.ksoc.harmonika.ui.theme.HarmonikaTheme
 
-class HarmonikaApp : AppCompatActivity() {
+class HarmonikaWelcomeActivity : AppCompatActivity() {
 
     private lateinit var musicViewModel: MusicViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.setBackgroundDrawable(
@@ -72,7 +73,7 @@ class HarmonikaApp : AppCompatActivity() {
 
 @Composable
 fun AppContent(musicViewModel: MusicViewModel) {
-    val searchTextState = remember { mutableStateOf("") }
+    var searchText by remember { mutableStateOf("") }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -85,13 +86,13 @@ fun AppContent(musicViewModel: MusicViewModel) {
         MediaDropdown()
         Spacer(modifier = Modifier.padding(top = 30.dp))
         SearchOutlinedTextField(
-            searchText = searchTextState.value,
-            onSearchTextChanged = { newText -> searchTextState.value = newText })
+            searchText = searchText,
+            onSearchTextChanged = { newSearchText -> searchText = newSearchText }
+        )
         Spacer(modifier = Modifier.padding(top = 30.dp))
-        SearchButton(musicViewModel)
+        SearchButton(musicViewModel = musicViewModel, searchText = searchText)
     }
 }
-
 
 @Composable
 fun HomeTitleAndLogo() {
@@ -111,7 +112,7 @@ fun HomeTitleAndLogo() {
             painter = painterResource(id = R.drawable.baseline_music_note_24),
             contentDescription = null,
             modifier = Modifier.size(50.dp),
-//            colorFilter = ColorFilter.tint(Color(0xFF122259))
+//            todo: colorFilter = ColorFilter.tint(Color(0xFF122259))
         )
     }
 }
@@ -180,7 +181,7 @@ fun SearchOutlinedTextField(
             placeholder = {
                 Text(
                     "Enter your search",
-                    style = TextStyle(color = Color.White)
+                    style = TextStyle(color = Color.LightGray)
                 ) // Set the placeholder text color to white
             },
             singleLine = true, // Set the singleLine modifier to true
@@ -191,16 +192,13 @@ fun SearchOutlinedTextField(
             keyboardActions = KeyboardActions(
                 onDone = { focusManager.clearFocus() } // Call onSearchDone when "Done" action is triggered
             ),
+            textStyle = TextStyle(color = Color.White) // Set text color to white
         )
     }
 }
 
 @Composable
-fun SearchButton(musicViewModel: MusicViewModel) {
-//    val scope = rememberCoroutineScope()
-//    var searchResults by remember { mutableStateOf<List<TrackItem>?>(null) }
-    val searchText = "Yesterday"
-
+fun SearchButton(musicViewModel: MusicViewModel, searchText: String) {
     Button(
         onClick = {
             musicViewModel.searchTracks(searchText)
@@ -215,6 +213,7 @@ fun SearchButton(musicViewModel: MusicViewModel) {
         }
     }
 
+    // Display search results if available
     musicViewModel.searchResults?.let { results ->
         if (results.isNotEmpty()) {
             Column {

@@ -1,5 +1,8 @@
-package com.ksoc.harmonika.data
+package com.ksoc.harmonika.data.repository
 
+import com.ksoc.harmonika.data.model.TrackItem
+import com.ksoc.harmonika.data.network.RetrofitClient
+import com.ksoc.harmonika.data.network.spotifyAuthService
 import java.io.IOException
 
 class MusicRepository {

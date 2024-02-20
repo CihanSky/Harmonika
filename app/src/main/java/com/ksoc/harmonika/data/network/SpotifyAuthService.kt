@@ -1,6 +1,6 @@
-package com.ksoc.harmonika.data
+package com.ksoc.harmonika.data.network
 
-import AccessTokenResponse
+import com.ksoc.harmonika.data.model.AccessTokenResponse
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Field

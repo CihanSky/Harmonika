@@ -1,5 +1,6 @@
-package com.ksoc.harmonika.data
+package com.ksoc.harmonika.data.network
 
+import com.ksoc.harmonika.data.model.SearchResponse
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query

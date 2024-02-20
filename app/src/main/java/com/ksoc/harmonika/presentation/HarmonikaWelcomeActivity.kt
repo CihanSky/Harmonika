@@ -1,4 +1,4 @@
-package com.ksoc.harmonika
+package com.ksoc.harmonika.presentation
 
 import MusicViewModel
 import android.graphics.drawable.ColorDrawable
@@ -48,6 +48,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
+import com.ksoc.harmonika.R
 import com.ksoc.harmonika.ui.theme.HarmonikaTheme
 
 class HarmonikaApp : AppCompatActivity() {

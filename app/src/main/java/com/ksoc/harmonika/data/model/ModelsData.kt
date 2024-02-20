@@ -1,4 +1,4 @@
-package com.ksoc.harmonika.data
+package com.ksoc.harmonika.data.model
 
 data class SearchResponse(
     val tracks: TrackResponse

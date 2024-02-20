@@ -1,8 +1,11 @@
 package com.ksoc.harmonika.presentation
 
 import MusicViewModel
+import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
@@ -12,7 +15,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -40,6 +42,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -65,14 +68,14 @@ class HarmonikaWelcomeActivity : AppCompatActivity() {
         musicViewModel = ViewModelProvider(this)[MusicViewModel::class.java]
         setContent {
             HarmonikaTheme {
-                AppContent(musicViewModel = musicViewModel)
+                AppContent(musicViewModel = musicViewModel, context = LocalContext.current)
             }
         }
     }
 }
 
 @Composable
-fun AppContent(musicViewModel: MusicViewModel) {
+fun AppContent(musicViewModel: MusicViewModel, context: Context) {
     var searchText by remember { mutableStateOf("") }
 
     Column(
@@ -90,7 +93,7 @@ fun AppContent(musicViewModel: MusicViewModel) {
             onSearchTextChanged = { newSearchText -> searchText = newSearchText }
         )
         Spacer(modifier = Modifier.padding(top = 30.dp))
-        SearchButton(musicViewModel = musicViewModel, searchText = searchText)
+        SearchButton(musicViewModel = musicViewModel, searchText = searchText, context = context)
     }
 }
 
@@ -198,10 +201,19 @@ fun SearchOutlinedTextField(
 }
 
 @Composable
-fun SearchButton(musicViewModel: MusicViewModel, searchText: String) {
+fun SearchButton(musicViewModel: MusicViewModel, searchText: String, context: Context) {
     Button(
         onClick = {
-            musicViewModel.searchTracks(searchText)
+            if (searchText.isNotBlank()) {
+                musicViewModel.searchTracks(searchText) { searchResults ->
+                    val intent = Intent(context, SearchResultActivity::class.java)
+                    intent.putExtra("searchResults", searchResults.toTypedArray())
+                    context.startActivity(intent)
+                }
+            } else {
+                // Handle the case when searchText is empty (optional)
+                Toast.makeText(context, "Please enter a search text", Toast.LENGTH_SHORT).show()
+            }
         },
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray),
         elevation = ButtonDefaults.elevation(defaultElevation = 0.dp)
@@ -212,28 +224,14 @@ fun SearchButton(musicViewModel: MusicViewModel, searchText: String) {
             Text(text = "Search")
         }
     }
-
-    // Display search results if available
-    musicViewModel.searchResults?.let { results ->
-        if (results.isNotEmpty()) {
-            Column {
-                Text("Search Results:")
-                Spacer(modifier = Modifier.height(8.dp))
-                results.forEach { track ->
-                    Text("${track.name} by ${track.artists.joinToString(", ") { it.name }}")
-                }
-            }
-        } else {
-            Text("No results found")
-        }
-    }
 }
+
 
 @Preview
 @Composable
 fun Preview_AppContent() {
     HarmonikaTheme {
         val musicViewModel = remember { MusicViewModel() } // Create an instance of MusicViewModel
-        AppContent(musicViewModel)
+        AppContent(musicViewModel, LocalContext.current)
     }
 }

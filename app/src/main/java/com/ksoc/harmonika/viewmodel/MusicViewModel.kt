@@ -3,8 +3,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ksoc.harmonika.data.model.ArtistItem
-import com.ksoc.harmonika.data.model.TrackItem
+import com.ksoc.harmonika.data.model.Artist
+import com.ksoc.harmonika.data.model.Track
 import com.ksoc.harmonika.data.repository.MusicRepository
 import kotlinx.coroutines.launch
 
@@ -12,15 +12,15 @@ class MusicViewModel : ViewModel() {
     private val trackRepository = MusicRepository()
 
     // Using LiveData to hold the search results
-    private val _searchResults = MutableLiveData<List<TrackItem>>()
-    val searchResults: LiveData<List<TrackItem>> = _searchResults
+    private val _searchResults = MutableLiveData<List<Track>>()
+    val searchResults: LiveData<List<Track>> = _searchResults
 
-    private val _searchArtists = MutableLiveData<List<ArtistItem>>()
-    val searchArtists: LiveData<List<ArtistItem>> = _searchArtists
+    private val _searchArtists = MutableLiveData<List<Artist>>()
+    val searchArtists: LiveData<List<Artist>> = _searchArtists
 
-    fun searchTracks(query: String, callback: (List<TrackItem>) -> Unit) {
+    fun searchTracks(query: String, callback: (List<Track>) -> Unit) {
         viewModelScope.launch {
-            val tracks = trackRepository.searchSongs(query) ?: listOf()
+            val tracks = trackRepository.searchTracks(query)
             _searchResults.value = tracks
 
             // Invoke the callback with the search results
@@ -28,7 +28,7 @@ class MusicViewModel : ViewModel() {
         }
     }
 
-    fun searchArtists(query: String, callback: (List<ArtistItem>) -> Unit) {
+    fun searchArtists(query: String, callback: (List<Artist>) -> Unit) {
         viewModelScope.launch {
             val artists = trackRepository.searchArtists(query) ?: listOf()
             _searchArtists.value = artists

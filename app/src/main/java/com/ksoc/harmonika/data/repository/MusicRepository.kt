@@ -1,14 +1,14 @@
 package com.ksoc.harmonika.data.repository
 
-import com.ksoc.harmonika.data.model.ArtistItem
-import com.ksoc.harmonika.data.model.TrackItem
+import com.ksoc.harmonika.data.model.Artist
+import com.ksoc.harmonika.data.model.Track
 import com.ksoc.harmonika.data.network.RetrofitClient
 import com.ksoc.harmonika.data.network.spotifyAuthService
 import java.io.IOException
 
 class MusicRepository {
 
-    suspend fun searchSongs(query: String): List<TrackItem> {
+    suspend fun searchTracks(query: String): List<Track> {
         val accessToken = getAccessToken()
         try {
             val response = RetrofitClient.spotifyApiService.searchTracks("Bearer $accessToken", query)
@@ -18,7 +18,7 @@ class MusicRepository {
         }
     }
 
-    suspend fun searchArtists(query: String): List<ArtistItem> {
+    suspend fun searchArtists(query: String): List<Artist> {
         val accessToken = getAccessToken()
         try {
             val response = RetrofitClient.spotifyApiService.searchArtists("Bearer $accessToken", query)

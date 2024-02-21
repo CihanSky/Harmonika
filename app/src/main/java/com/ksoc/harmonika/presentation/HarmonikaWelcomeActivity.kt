@@ -75,7 +75,7 @@ class HarmonikaWelcomeActivity : AppCompatActivity() {
 @Composable
 fun AppContent(musicViewModel: MusicViewModel, context: Context) {
     var searchText by remember { mutableStateOf("") }
-    var selectedItemType by remember { mutableStateOf("Songs") }
+    var selectedItemType by remember { mutableStateOf("Tracks") }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -111,7 +111,7 @@ fun HomeTitleAndLogo() {
             .padding(top = 75.dp)
     ) {
         Text(
-            text = "Search your favorite \nSong, Artist or Album!",
+            text = "Search your favorite \nTrack, Artist or Album!",
             style = TextStyle(
                 fontSize = 22.sp,
             ),
@@ -132,7 +132,7 @@ fun MediaDropdown(
     onSelectedItemTypeChanged: (String) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    val choices = listOf("Songs", "Artists", "Albums")
+    val choices = listOf("Tracks", "Artists", "Albums")
 
     ExposedDropdownMenuBox(
         modifier = Modifier.padding(horizontal = 35.dp), // Add horizontal padding
@@ -218,7 +218,7 @@ fun SearchButton(
         onClick = {
             if (searchText.isNotBlank()) {
                 when (selectedItemType) {
-                    "Songs" -> musicViewModel.searchTracks(searchText) { searchResults ->
+                    "Tracks" -> musicViewModel.searchTracks(searchText) { searchResults ->
                         val intent = Intent(context, SearchResultActivity::class.java)
                         intent.putExtra("searchResults", searchResults.toTypedArray())
                         context.startActivity(intent)

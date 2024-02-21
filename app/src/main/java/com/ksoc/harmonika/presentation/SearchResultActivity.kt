@@ -25,9 +25,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.ksoc.harmonika.R
-import com.ksoc.harmonika.data.model.AlbumItem
-import com.ksoc.harmonika.data.model.ArtistItem
-import com.ksoc.harmonika.data.model.TrackItem
+import com.ksoc.harmonika.data.model.Album
+import com.ksoc.harmonika.data.model.Artist
+import com.ksoc.harmonika.data.model.Track
 import com.ksoc.harmonika.ui.theme.HarmonikaTheme
 import com.ksoc.harmonika.ui.theme.md_theme_dark_onSurface
 import com.ksoc.harmonika.ui.theme.md_theme_dark_onTertiary
@@ -43,7 +43,7 @@ class SearchResultActivity : AppCompatActivity() {
         }
 
         val searchResults =
-            intent.getParcelableArrayExtra("searchResults")?.filterIsInstance<TrackItem>()
+            intent.getParcelableArrayExtra("searchResults")?.filterIsInstance<Track>()
                 ?: emptyList()
 
         setContent {
@@ -61,7 +61,7 @@ class SearchResultActivity : AppCompatActivity() {
 }
 
 @Composable
-fun SearchResultContent(searchResults: List<TrackItem>?) {
+fun SearchResultContent(searchResults: List<Track>?) {
     val scrollState = rememberScrollState()
 
     Column(
@@ -77,7 +77,7 @@ fun SearchResultContent(searchResults: List<TrackItem>?) {
 }
 
 @Composable
-fun TrackListItem(track: TrackItem) {
+fun TrackListItem(track: Track) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -120,10 +120,10 @@ fun TrackListItem(track: TrackItem) {
 fun Preview_SearchResultActivity() {
     HarmonikaTheme {
         TrackListItem(
-            TrackItem(
+            Track(
                 name = "Yesterday",
-                artists = listOf(ArtistItem("Beatles")),
-                album = AlbumItem(name = "Help!")
+                artists = listOf(Artist("Beatles")),
+                album = Album(name = "Help!")
             )
         )
     }

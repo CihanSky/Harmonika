@@ -1,5 +1,6 @@
 package com.ksoc.harmonika.data.repository
 
+import com.ksoc.harmonika.data.model.Album
 import com.ksoc.harmonika.data.model.Artist
 import com.ksoc.harmonika.data.model.Track
 import com.ksoc.harmonika.data.network.RetrofitClient
@@ -22,6 +23,16 @@ class MusicRepository {
         val accessToken = getAccessToken()
         try {
             val response = RetrofitClient.spotifyApiService.searchArtists("Bearer $accessToken", query)
+            return response.artists.items
+        } catch (e: Exception) {
+            throw IOException("Error searching for tracks: ${e.message}")
+        }
+    }
+
+    suspend fun searchAlbums(query: String): List<Album> {
+        val accessToken = getAccessToken()
+        try {
+            val response = RetrofitClient.spotifyApiService.searchAlbums("Bearer $accessToken", query)
             return response.artists.items
         } catch (e: Exception) {
             throw IOException("Error searching for tracks: ${e.message}")

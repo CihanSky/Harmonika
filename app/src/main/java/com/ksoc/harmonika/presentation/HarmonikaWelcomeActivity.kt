@@ -223,14 +223,16 @@ fun SearchButton(
                         intent.putExtra("searchResults", searchResults.toTypedArray())
                         context.startActivity(intent)
                     }
-                    "Artists" -> musicViewModel.searchArtists(searchText) {  searchResults ->
+                    "Artists" -> musicViewModel.searchArtists(searchText) { searchResults ->
                         val intent = Intent(context, SearchResultActivity::class.java)
                         intent.putExtra("searchResults", searchResults.toTypedArray())
                         context.startActivity(intent)
                     }
-//                    "Albums" -> musicViewModel.searchAlbums(searchText) { searchResults ->
-//                        // Perform search for albums
-//                    }
+                    "Albums" -> musicViewModel.searchAlbums(searchText) { searchResults ->
+                        val intent = Intent(context, SearchResultActivity::class.java)
+                        intent.putExtra("searchResults", searchResults.toTypedArray())
+                        context.startActivity(intent)
+                    }
                 }
             } else {
                 Toast.makeText(context, "Please enter a search text", Toast.LENGTH_SHORT).show()

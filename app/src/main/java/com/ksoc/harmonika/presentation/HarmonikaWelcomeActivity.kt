@@ -61,9 +61,7 @@ class HarmonikaWelcomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.setBackgroundDrawable(
-            ColorDrawable(
-                getColor(R.color.custom_purple)
-            )
+            ColorDrawable(getColor(R.color.custom_purple))
         )
         musicViewModel = ViewModelProvider(this)[MusicViewModel::class.java]
         setContent {
@@ -77,6 +75,7 @@ class HarmonikaWelcomeActivity : AppCompatActivity() {
 @Composable
 fun AppContent(musicViewModel: MusicViewModel, context: Context) {
     var searchText by remember { mutableStateOf("") }
+    var selectedItemType by remember { mutableStateOf("Songs") }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -86,14 +85,21 @@ fun AppContent(musicViewModel: MusicViewModel, context: Context) {
     ) {
         HomeTitleAndLogo()
         Spacer(modifier = Modifier.padding(top = 50.dp))
-        MediaDropdown()
+        MediaDropdown(selectedItemType = selectedItemType) { newType ->
+            selectedItemType = newType
+        }
         Spacer(modifier = Modifier.padding(top = 30.dp))
         SearchOutlinedTextField(
             searchText = searchText,
             onSearchTextChanged = { newSearchText -> searchText = newSearchText }
         )
         Spacer(modifier = Modifier.padding(top = 30.dp))
-        SearchButton(musicViewModel = musicViewModel, searchText = searchText, context = context)
+        SearchButton(
+            musicViewModel = musicViewModel,
+            searchText = searchText,
+            selectedItemType = selectedItemType,
+            context = context
+        )
     }
 }
 
@@ -115,17 +121,18 @@ fun HomeTitleAndLogo() {
             painter = painterResource(id = R.drawable.baseline_music_note_24),
             contentDescription = null,
             modifier = Modifier.size(50.dp),
-//            todo: colorFilter = ColorFilter.tint(Color(0xFF122259))
         )
     }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MediaDropdown() {
+fun MediaDropdown(
+    selectedItemType: String,
+    onSelectedItemTypeChanged: (String) -> Unit
+) {
     var expanded by remember { mutableStateOf(false) }
     val choices = listOf("Songs", "Artists", "Albums")
-    var selectedChoice by remember { mutableStateOf(choices[0]) }
 
     ExposedDropdownMenuBox(
         modifier = Modifier.padding(horizontal = 35.dp), // Add horizontal padding
@@ -136,7 +143,7 @@ fun MediaDropdown() {
     ) {
         TextField(
             readOnly = true,
-            value = selectedChoice,
+            value = selectedItemType,
             onValueChange = { },
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(
@@ -154,7 +161,7 @@ fun MediaDropdown() {
         ) {
             choices.forEach { choice ->
                 DropdownMenuItem(onClick = {
-                    selectedChoice = choice
+                    onSelectedItemTypeChanged(choice)
                     expanded = false
                 }) {
                     Text(text = choice)
@@ -201,17 +208,31 @@ fun SearchOutlinedTextField(
 }
 
 @Composable
-fun SearchButton(musicViewModel: MusicViewModel, searchText: String, context: Context) {
+fun SearchButton(
+    musicViewModel: MusicViewModel,
+    searchText: String,
+    selectedItemType: String,
+    context: Context
+) {
     Button(
         onClick = {
             if (searchText.isNotBlank()) {
-                musicViewModel.searchTracks(searchText) { searchResults ->
-                    val intent = Intent(context, SearchResultActivity::class.java)
-                    intent.putExtra("searchResults", searchResults.toTypedArray())
-                    context.startActivity(intent)
+                when (selectedItemType) {
+                    "Songs" -> musicViewModel.searchTracks(searchText) { searchResults ->
+                        val intent = Intent(context, SearchResultActivity::class.java)
+                        intent.putExtra("searchResults", searchResults.toTypedArray())
+                        context.startActivity(intent)
+                    }
+                    "Artists" -> musicViewModel.searchArtists(searchText) {  searchResults ->
+                        val intent = Intent(context, SearchResultActivity::class.java)
+                        intent.putExtra("searchResults", searchResults.toTypedArray())
+                        context.startActivity(intent)
+                    }
+//                    "Albums" -> musicViewModel.searchAlbums(searchText) { searchResults ->
+//                        // Perform search for albums
+//                    }
                 }
             } else {
-                // Handle the case when searchText is empty (optional)
                 Toast.makeText(context, "Please enter a search text", Toast.LENGTH_SHORT).show()
             }
         },

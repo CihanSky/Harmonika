@@ -1,5 +1,6 @@
 package com.ksoc.harmonika.data.repository
 
+import com.ksoc.harmonika.data.model.ArtistItem
 import com.ksoc.harmonika.data.model.TrackItem
 import com.ksoc.harmonika.data.network.RetrofitClient
 import com.ksoc.harmonika.data.network.spotifyAuthService
@@ -7,7 +8,6 @@ import java.io.IOException
 
 class MusicRepository {
 
-    // Function to perform the search
     suspend fun searchSongs(query: String): List<TrackItem> {
         val accessToken = getAccessToken()
         try {
@@ -18,7 +18,16 @@ class MusicRepository {
         }
     }
 
-    // todo: are we returning same results like albums etc in web exp response?
+    suspend fun searchArtists(query: String): List<ArtistItem> {
+        val accessToken = getAccessToken()
+        try {
+            val response = RetrofitClient.spotifyApiService.searchArtists("Bearer $accessToken", query)
+            return response.artists.items
+        } catch (e: Exception) {
+            throw IOException("Error searching for tracks: ${e.message}")
+        }
+    }
+
 
     suspend fun getAccessToken(): String {
         val clientId = "7b9b98118a7e481bbc273ba6e1cf2260"

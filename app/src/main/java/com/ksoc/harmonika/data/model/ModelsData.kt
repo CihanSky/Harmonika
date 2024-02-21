@@ -11,12 +11,29 @@ data class TrackResponse(
     val items: List<TrackItem>
 )
 
+data class SearchArtistResponse(
+    val artists: ArtistResponse
+)
+
+data class ArtistResponse(
+    val items: List<ArtistItem>
+)
+
+@Parcelize
+data class ArtistItem(
+    val name: String = "",
+    val id: String = "",
+    val external_urls: Map<String, String> = mapOf(),
+    val href: String = "",
+    val uri: String = ""
+) : Parcelable
+
 @Parcelize
 data class TrackItem(
     val name: String,
-    val artists: List<Artist>,
+    val artists: List<ArtistItem>,
     val id: String = "",
-    val album: Album,
+    val album: AlbumItem,
     val disc_number: Int = 0,
     val track_number: Int = 0,
     val duration_ms: Int = 0,
@@ -30,23 +47,14 @@ data class TrackItem(
 ) : Parcelable
 
 @Parcelize
-data class Artist(
-    val name: String = "",
-    val id: String = "",
-    val external_urls: Map<String, String> = mapOf(),
-    val href: String = "",
-    val uri: String = ""
-) : Parcelable
-
-@Parcelize
-data class Album(
+data class AlbumItem(
     val id: String = "",
     val name: String = "",
     val album_type: String = "",
     val total_tracks: Int = 0,
     val release_date: String = "",
     val release_date_precision: String = "",
-    val artists: List<Artist> = listOf(),
+    val artists: List<ArtistItem> = listOf(),
     val href: String = "",
     val uri: String = "",
     val external_urls: ExternalUrls = ExternalUrls(),
@@ -67,4 +75,8 @@ data class Images(
     val width: Int = 0
 ): Parcelable
 
-
+sealed class SearchResultItem : Parcelable {
+    @Parcelize data class Track(val trackItems: List<TrackItem>) : SearchResultItem()
+    @Parcelize data class Artist(val artists: List<ArtistItem>) : SearchResultItem()
+    @Parcelize data class Album(val albums: List<AlbumItem>) : SearchResultItem()
+}

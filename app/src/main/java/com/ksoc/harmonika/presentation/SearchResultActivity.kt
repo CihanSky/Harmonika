@@ -25,8 +25,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.ksoc.harmonika.R
-import com.ksoc.harmonika.data.model.Album
-import com.ksoc.harmonika.data.model.Artist
+import com.ksoc.harmonika.data.model.AlbumItem
+import com.ksoc.harmonika.data.model.ArtistItem
 import com.ksoc.harmonika.data.model.TrackItem
 import com.ksoc.harmonika.ui.theme.HarmonikaTheme
 import com.ksoc.harmonika.ui.theme.md_theme_dark_onSurface
@@ -41,11 +41,10 @@ class SearchResultActivity : AppCompatActivity() {
             setBackgroundDrawable(ColorDrawable(getColor(R.color.custom_purple)))
             setDisplayHomeAsUpEnabled(true) // Show the back button
         }
-        // Extract the Serializable ArrayList from the intent
+
         val searchResults =
             intent.getParcelableArrayExtra("searchResults")?.filterIsInstance<TrackItem>()
                 ?: emptyList()
-
 
         setContent {
             HarmonikaTheme {
@@ -58,6 +57,7 @@ class SearchResultActivity : AppCompatActivity() {
         onBackPressed() // Handle back button click event
         return true
     }
+
 }
 
 @Composable
@@ -76,15 +76,6 @@ fun SearchResultContent(searchResults: List<TrackItem>?) {
     }
 }
 
-
-/**
- * A composable function that displays a list item for a track.
- * The list item includes the track's image, name, and artist.
- * Also includes a click action for the track.
- *
- * @param track The track to be displayed.
- * @param onTrackClick The action to be performed when the track item is clicked.
- */
 @Composable
 fun TrackListItem(track: TrackItem) {
     Row(
@@ -94,8 +85,6 @@ fun TrackListItem(track: TrackItem) {
             .clip(shape = RoundedCornerShape(8.dp))
             .background(color = md_theme_dark_onTertiary)
     ) {
-        //        TrackImage(trackImage = track.trackImage, modifier = Modifier.size(size = 64.dp))
-        // Track Image
         val painter = rememberImagePainter(
             data = track.album.images.firstOrNull()?.url,
             builder = {
@@ -103,13 +92,17 @@ fun TrackListItem(track: TrackItem) {
                 error(R.drawable.baseline_music_note_24) // Error image resource
             }
         )
+
         Image(
             painter = painter,
             contentDescription = null,
-            modifier = Modifier.size(75.dp).padding(all = 10.dp),
+            modifier = Modifier
+                .size(75.dp)
+                .padding(all = 10.dp),
             contentScale = ContentScale.Crop,
             alignment = Alignment.Center
         )
+
         Column(
             modifier = Modifier
                 .padding(all = 10.dp)
@@ -129,8 +122,8 @@ fun Preview_SearchResultActivity() {
         TrackListItem(
             TrackItem(
                 name = "Yesterday",
-                artists = listOf(Artist("Beatles")),
-                album = Album(name = "Help!")
+                artists = listOf(ArtistItem("Beatles")),
+                album = AlbumItem(name = "Help!")
             )
         )
     }

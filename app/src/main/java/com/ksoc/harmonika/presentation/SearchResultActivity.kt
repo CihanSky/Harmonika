@@ -20,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,6 +29,8 @@ import com.ksoc.harmonika.data.model.Album
 import com.ksoc.harmonika.data.model.Artist
 import com.ksoc.harmonika.data.model.TrackItem
 import com.ksoc.harmonika.ui.theme.HarmonikaTheme
+import com.ksoc.harmonika.ui.theme.md_theme_dark_onSurface
+import com.ksoc.harmonika.ui.theme.md_theme_dark_onTertiary
 
 
 class SearchResultActivity : AppCompatActivity() {
@@ -89,9 +90,9 @@ fun TrackListItem(track: TrackItem) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .padding(top = 25.dp, start = 20.dp, end = 20.dp)
+            .padding(top = 20.dp, start = 20.dp, end = 20.dp)
             .clip(shape = RoundedCornerShape(8.dp))
-            .background(color = Color.LightGray)
+            .background(color = md_theme_dark_onTertiary)
     ) {
         //        TrackImage(trackImage = track.trackImage, modifier = Modifier.size(size = 64.dp))
         // Track Image
@@ -105,26 +106,18 @@ fun TrackListItem(track: TrackItem) {
         Image(
             painter = painter,
             contentDescription = null,
-            modifier = Modifier.size(75.dp).padding(start = 10.dp, end = 10.dp),
+            modifier = Modifier.size(75.dp).padding(all = 10.dp),
             contentScale = ContentScale.Crop,
             alignment = Alignment.Center
         )
-        // Track Information
-
-//        Image(
-//            painter = painterResource(id = R.drawable.baseline_music_note_24),
-//            contentDescription = null,
-//            modifier = Modifier.size(50.dp),
-//        )
         Column(
             modifier = Modifier
                 .padding(all = 10.dp)
                 .weight(weight = 1f)
         ) {
 
-            Text(text = "Artist: " + track.artists[0].name, style = typography.body1, color = Color.Black)
-            Text(text = "Track: " + track.name, style = typography.h6, color = Color.DarkGray)
-            Text(text = "Album: " + track.album.name, style = typography.subtitle1, color = Color.DarkGray)
+            Text(text = track.name, style = typography.h6, color = md_theme_dark_onSurface)
+            Text(text = track.artists[0].name, style = typography.caption, color = md_theme_dark_onSurface.copy(alpha = 0.6f))
         }
     }
 }

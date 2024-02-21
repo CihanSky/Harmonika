@@ -21,6 +21,21 @@ private val DarkColorScheme = darkColors(
     secondary = PurpleGrey80,
 )
 
+private val DarkThemeColors = darkColors(
+
+    primary = md_theme_dark_primary,
+    onPrimary = md_theme_dark_onPrimary,
+    secondary = md_theme_dark_secondary,
+    onSecondary = md_theme_dark_onSecondary,
+    error = md_theme_dark_error,
+    onError = md_theme_dark_onError,
+    background = md_theme_dark_background,
+    onBackground = md_theme_dark_onBackground,
+    surface = md_theme_dark_surface,
+    onSurface = md_theme_dark_onSurface,
+//    shadow = md_theme_dark_shadow,
+)
+
 private val LightColorScheme = lightColors(
     primary = Purple40,
     secondary = PurpleGrey40

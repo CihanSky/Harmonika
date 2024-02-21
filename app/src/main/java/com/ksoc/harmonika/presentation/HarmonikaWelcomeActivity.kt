@@ -2,7 +2,6 @@ package com.ksoc.harmonika.presentation
 
 import MusicViewModel
 import android.content.Context
-import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.widget.Toast
@@ -52,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
 import com.ksoc.harmonika.R
+import com.ksoc.harmonika.data.model.SearchFlow
 import com.ksoc.harmonika.ui.theme.HarmonikaTheme
 
 class HarmonikaWelcomeActivity : AppCompatActivity() {
@@ -219,19 +219,16 @@ fun SearchButton(
             if (searchText.isNotBlank()) {
                 when (selectedItemType) {
                     "Tracks" -> musicViewModel.searchTracks(searchText) { searchResults ->
-                        val intent = Intent(context, SearchResultActivity::class.java)
-                        intent.putExtra("searchResults", searchResults.toTypedArray())
-                        context.startActivity(intent)
+                        SearchResultActivity.getIntent(context,
+                            searchResults.toTypedArray(), SearchFlow.TRACK)
                     }
                     "Artists" -> musicViewModel.searchArtists(searchText) { searchResults ->
-                        val intent = Intent(context, SearchResultActivity::class.java)
-                        intent.putExtra("searchResults", searchResults.toTypedArray())
-                        context.startActivity(intent)
+                        SearchResultActivity.getIntent(context,
+                            searchResults.toTypedArray(), SearchFlow.ARTIST)
                     }
                     "Albums" -> musicViewModel.searchAlbums(searchText) { searchResults ->
-                        val intent = Intent(context, SearchResultActivity::class.java)
-                        intent.putExtra("searchResults", searchResults.toTypedArray())
-                        context.startActivity(intent)
+                        SearchResultActivity.getIntent(context,
+                            searchResults.toTypedArray(), SearchFlow.ALBUM)
                     }
                 }
             } else {

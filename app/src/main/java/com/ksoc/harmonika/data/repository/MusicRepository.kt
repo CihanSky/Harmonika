@@ -33,7 +33,7 @@ class MusicRepository {
         val accessToken = getAccessToken()
         try {
             val response = RetrofitClient.spotifyApiService.searchAlbums("Bearer $accessToken", query)
-            return response.artists.items
+            return response.albums.items
         } catch (e: Exception) {
             throw IOException("Error searching for tracks: ${e.message}")
         }

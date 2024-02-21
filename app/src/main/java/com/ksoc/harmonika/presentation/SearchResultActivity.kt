@@ -1,5 +1,7 @@
 package com.ksoc.harmonika.presentation
 
+import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -27,6 +29,7 @@ import coil.compose.rememberImagePainter
 import com.ksoc.harmonika.R
 import com.ksoc.harmonika.data.model.Album
 import com.ksoc.harmonika.data.model.Artist
+import com.ksoc.harmonika.data.model.SearchFlow
 import com.ksoc.harmonika.data.model.Track
 import com.ksoc.harmonika.ui.theme.HarmonikaTheme
 import com.ksoc.harmonika.ui.theme.md_theme_dark_onSurface
@@ -58,6 +61,16 @@ class SearchResultActivity : AppCompatActivity() {
         return true
     }
 
+    companion object {
+        const val EXTRA_SEARCH = "extra_search"
+        const val EXTRA_FLOW = "extra_flow"
+        fun getIntent(context: Context, arr: Array<Any>, searchFlow: SearchFlow) {
+            val intent = Intent(context, SearchResultActivity::class.java)
+            intent.putExtra(EXTRA_SEARCH, arr)
+            intent.putExtra(EXTRA_FLOW, searchFlow)
+            context.startActivity(intent)
+        }
+    }
 }
 
 @Composable

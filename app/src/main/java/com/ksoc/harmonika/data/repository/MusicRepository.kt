@@ -8,16 +8,17 @@ import java.io.IOException
 class MusicRepository {
 
     // Function to perform the search
-    suspend fun searchSongs(query: String): List<TrackItem>? {
+    suspend fun searchSongs(query: String): List<TrackItem> {
         val accessToken = getAccessToken()
         try {
-            val response = RetrofitClient.spotifyApiService
-                .searchTracks("Bearer $accessToken", query)
+            val response = RetrofitClient.spotifyApiService.searchTracks("Bearer $accessToken", query)
             return response.tracks.items
         } catch (e: Exception) {
             throw IOException("Error searching for tracks: ${e.message}")
         }
     }
+
+    // todo: are we returning same results like albums etc in web exp response?
 
     suspend fun getAccessToken(): String {
         val clientId = "7b9b98118a7e481bbc273ba6e1cf2260"

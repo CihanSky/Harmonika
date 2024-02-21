@@ -21,10 +21,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberImagePainter
 import com.ksoc.harmonika.R
+import com.ksoc.harmonika.data.model.Album
 import com.ksoc.harmonika.data.model.Artist
 import com.ksoc.harmonika.data.model.TrackItem
 import com.ksoc.harmonika.ui.theme.HarmonikaTheme
@@ -92,29 +94,52 @@ fun TrackListItem(track: TrackItem) {
             .background(color = Color.LightGray)
     ) {
         //        TrackImage(trackImage = track.trackImage, modifier = Modifier.size(size = 64.dp))
-        Image(
-            painter = painterResource(id = R.drawable.baseline_music_note_24),
-            contentDescription = null,
-            modifier = Modifier.size(50.dp),
+        // Track Image
+        val painter = rememberImagePainter(
+            data = track.album.images.firstOrNull()?.url,
+            builder = {
+                placeholder(R.drawable.baseline_music_note_24) // Placeholder image resource
+                error(R.drawable.baseline_music_note_24) // Error image resource
+            }
         )
+        Image(
+            painter = painter,
+            contentDescription = null,
+            modifier = Modifier.size(75.dp).padding(start = 10.dp, end = 10.dp),
+            contentScale = ContentScale.Crop,
+            alignment = Alignment.Center
+        )
+        // Track Information
+
+//        Image(
+//            painter = painterResource(id = R.drawable.baseline_music_note_24),
+//            contentDescription = null,
+//            modifier = Modifier.size(50.dp),
+//        )
         Column(
             modifier = Modifier
                 .padding(all = 10.dp)
                 .weight(weight = 1f)
         ) {
 
-            Text(text = track.artists[0].name, style = typography.body1, color = Color.Black)
-            Text(text = track.name, style = typography.h6, color = Color.DarkGray)
+            Text(text = "Artist: " + track.artists[0].name, style = typography.body1, color = Color.Black)
+            Text(text = "Track: " + track.name, style = typography.h6, color = Color.DarkGray)
+            Text(text = "Album: " + track.album.name, style = typography.subtitle1, color = Color.DarkGray)
         }
     }
 }
-
 
 @Preview
 @Composable
 fun Preview_SearchResultActivity() {
     HarmonikaTheme {
-        TrackListItem(TrackItem(name = "Yesterday", listOf(Artist("Beatles"))))
+        TrackListItem(
+            TrackItem(
+                name = "Yesterday",
+                artists = listOf(Artist("Beatles")),
+                album = Album(name = "Help!")
+            )
+        )
     }
 }
 

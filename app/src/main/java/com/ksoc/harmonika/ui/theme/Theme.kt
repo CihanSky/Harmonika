@@ -33,7 +33,6 @@ private val DarkThemeColors = darkColors(
     onBackground = md_theme_dark_onBackground,
     surface = md_theme_dark_surface,
     onSurface = md_theme_dark_onSurface,
-//    shadow = md_theme_dark_shadow,
 )
 
 private val LightColorScheme = lightColors(
@@ -83,7 +82,6 @@ fun HarmonikaTheme(
                 colors = listOf(GradientStartColor, GradientEndColor)
             ))
     ) {
-        // Place your content here
         content()
     }
 }

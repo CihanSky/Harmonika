@@ -17,7 +17,6 @@ interface SpotifyAuthService {
     ): AccessTokenResponse
 }
 
-// Retrofit instance for authentication
 val retrofitAuth = Retrofit.Builder()
     .baseUrl("https://accounts.spotify.com/")
     .addConverterFactory(GsonConverterFactory.create())

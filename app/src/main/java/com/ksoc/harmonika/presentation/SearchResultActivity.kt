@@ -116,8 +116,8 @@ fun TrackListItem(track: Track) {
         val painter = rememberImagePainter(
             data = track.album.images.firstOrNull()?.url,
             builder = {
-                placeholder(R.drawable.baseline_music_note_24) // Placeholder image resource
-                error(R.drawable.baseline_music_note_24) // Error image resource
+                placeholder(R.drawable.baseline_music_note_24)
+                error(R.drawable.baseline_music_note_24)
             }
         )
 
@@ -203,8 +203,8 @@ fun AlbumListItem(album: Album) {
         val painter = rememberImagePainter(
             data = album.images.firstOrNull()?.url,
             builder = {
-                placeholder(R.drawable.baseline_music_note_24) // Placeholder image resource
-                error(R.drawable.baseline_music_note_24) // Error image resource
+                placeholder(R.drawable.baseline_music_note_24)
+                error(R.drawable.baseline_music_note_24)
             }
         )
 

@@ -40,6 +40,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -78,6 +79,7 @@ class HarmonikaWelcomeActivity : AppCompatActivity() {
 fun AppContent(musicViewModel: MusicViewModel, context: Context) {
     var searchText by remember { mutableStateOf("") }
     var selectedItemType by remember { mutableStateOf("Tracks") }
+    val focusManager = LocalFocusManager.current
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -93,14 +95,16 @@ fun AppContent(musicViewModel: MusicViewModel, context: Context) {
         Spacer(modifier = Modifier.padding(top = 30.dp))
         SearchOutlinedTextField(
             searchText = searchText,
-            onSearchTextChanged = { newSearchText -> searchText = newSearchText }
+            onSearchTextChanged = { newSearchText -> searchText = newSearchText },
+            focusManager = focusManager
         )
         Spacer(modifier = Modifier.padding(top = 30.dp))
         SearchButton(
             musicViewModel = musicViewModel,
             searchText = searchText,
             selectedItemType = selectedItemType,
-            context = context
+            context = context,
+            focusManager = focusManager
         )
     }
 }
@@ -137,7 +141,7 @@ fun MediaDropdown(
     val choices = listOf("Tracks", "Artists", "Albums")
 
     ExposedDropdownMenuBox(
-        modifier = Modifier.padding(horizontal = 35.dp), // Add horizontal padding
+        modifier = Modifier.padding(horizontal = 35.dp),
         expanded = expanded,
         onExpandedChange = {
             expanded = !expanded
@@ -177,34 +181,34 @@ fun MediaDropdown(
 fun SearchOutlinedTextField(
     searchText: String,
     onSearchTextChanged: (String) -> Unit,
+    focusManager: FocusManager
 ) {
-    val focusManager = LocalFocusManager.current
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 40.dp) // Fill the entire width of the screen
+            .padding(horizontal = 40.dp)
     ) {
         OutlinedTextField(
             value = searchText,
             onValueChange = { newSearchText ->
-                onSearchTextChanged(newSearchText) // Call the provided function with the new search text
+                onSearchTextChanged(newSearchText)
             },
             placeholder = {
                 Text(
                     "Enter your search",
                     style = TextStyle(color = Color.LightGray)
-                ) // Set the placeholder text color to white
+                )
             },
-            singleLine = true, // Set the singleLine modifier to true
+            singleLine = true,
             modifier = Modifier
                 .background(color = MaterialTheme.colors.onSurface.copy(alpha = TextFieldDefaults.BackgroundOpacity))
                 .fillMaxWidth(),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done), // Set imeAction to Done
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(
-                onDone = { focusManager.clearFocus() } // Call onSearchDone when "Done" action is triggered
+                onDone = { focusManager.clearFocus() }
             ),
-            textStyle = TextStyle(color = Color.White) // Set text color to white
+            textStyle = TextStyle(color = Color.White)
         )
     }
 }
@@ -214,13 +218,15 @@ fun SearchButton(
     musicViewModel: MusicViewModel,
     searchText: String,
     selectedItemType: String,
-    context: Context
+    context: Context,
+    focusManager: FocusManager
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     Button(
         onClick = {
             if (searchText.isNotBlank()) {
                 keyboardController?.hide()
+                focusManager.clearFocus()
                 when (selectedItemType) {
                     "Tracks" -> musicViewModel.searchTracks(searchText) { searchResults ->
                         SearchResultActivity.getIntent(context,
@@ -244,7 +250,7 @@ fun SearchButton(
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(Icons.Filled.Search, contentDescription = "Search")
-            Spacer(modifier = Modifier.width(4.dp)) // Add some spacing between icon and text
+            Spacer(modifier = Modifier.width(4.dp))
             Text(text = "Search")
         }
     }
@@ -255,7 +261,7 @@ fun SearchButton(
 @Composable
 fun Preview_AppContent() {
     HarmonikaTheme {
-        val musicViewModel = remember { MusicViewModel() } // Create an instance of MusicViewModel
+        val musicViewModel = remember { MusicViewModel() }
         AppContent(musicViewModel, LocalContext.current)
     }
 }

@@ -12,7 +12,6 @@ import kotlinx.coroutines.launch
 class MusicViewModel : ViewModel() {
     private val trackRepository = MusicRepository()
 
-    // Using LiveData to hold the search results
     private val _searchResults = MutableLiveData<List<Track>>()
     val searchResults: LiveData<List<Track>> = _searchResults
 
@@ -26,8 +25,6 @@ class MusicViewModel : ViewModel() {
         viewModelScope.launch {
             val tracks = trackRepository.searchTracks(query)
             _searchResults.value = tracks
-
-            // Invoke the callback with the search results
             callback(tracks)
         }
     }

@@ -43,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -215,9 +216,11 @@ fun SearchButton(
     selectedItemType: String,
     context: Context
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
     Button(
         onClick = {
             if (searchText.isNotBlank()) {
+                keyboardController?.hide()
                 when (selectedItemType) {
                     "Tracks" -> musicViewModel.searchTracks(searchText) { searchResults ->
                         SearchResultActivity.getIntent(context,

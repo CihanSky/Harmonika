@@ -64,6 +64,7 @@ class HarmonikaWelcomeActivity : AppCompatActivity() {
             ColorDrawable(getColor(R.color.custom_purple))
         )
         musicViewModel = ViewModelProvider(this)[MusicViewModel::class.java]
+
         setContent {
             HarmonikaTheme {
                 AppContent(musicViewModel = musicViewModel, context = LocalContext.current)

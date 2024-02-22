@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Parcelable
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
@@ -42,12 +43,14 @@ class SearchResultActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         supportActionBar?.apply {
             setBackgroundDrawable(ColorDrawable(getColor(R.color.custom_purple)))
-            setDisplayHomeAsUpEnabled(true) // Show the back button
+            setDisplayHomeAsUpEnabled(true)
         }
 
         val searchResults =
-            intent.getParcelableArrayExtra("searchResults")?.filterIsInstance<Track>()
+            intent.getParcelableArrayExtra(EXTRA_SEARCH)?.filterIsInstance<Track>()
                 ?: emptyList()
+
+
 
         setContent {
             HarmonikaTheme {
@@ -57,14 +60,14 @@ class SearchResultActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressed() // Handle back button click event
+        onBackPressed()
         return true
     }
 
     companion object {
         const val EXTRA_SEARCH = "extra_search"
         const val EXTRA_FLOW = "extra_flow"
-        fun getIntent(context: Context, arr: Array<Any>, searchFlow: SearchFlow) {
+        fun getIntent(context: Context, arr: Array<out Parcelable>, searchFlow: SearchFlow) {
             val intent = Intent(context, SearchResultActivity::class.java)
             intent.putExtra(EXTRA_SEARCH, arr)
             intent.putExtra(EXTRA_FLOW, searchFlow)

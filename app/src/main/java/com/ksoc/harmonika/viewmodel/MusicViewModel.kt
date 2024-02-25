@@ -32,7 +32,7 @@ class MusicViewModel : ViewModel() {
 
     fun searchArtists(query: String, callback: (List<Artist>) -> Unit) {
         viewModelScope.launch {
-            val artists = trackRepository.searchArtists(query) ?: listOf()
+            val artists = trackRepository.searchArtists(query)
             _searchArtists.value = artists
             callback(artists)
         }
@@ -40,7 +40,7 @@ class MusicViewModel : ViewModel() {
 
     fun searchAlbums(query: String, callback: (List<Album>) -> Unit) {
         viewModelScope.launch {
-            val albums = trackRepository.searchAlbums(query) ?: listOf()
+            val albums = trackRepository.searchAlbums(query)
             _searchAlbums.value = albums
             callback(albums)
         }

@@ -1,6 +1,5 @@
 package com.ksoc.harmonika.presentation
 
-import MusicViewModel
 import android.content.Context
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -55,6 +54,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.ksoc.harmonika.R
 import com.ksoc.harmonika.data.model.SearchFlow
 import com.ksoc.harmonika.ui.theme.HarmonikaTheme
+import com.ksoc.harmonika.viewmodel.MusicViewModel
 
 class HarmonikaWelcomeActivity : AppCompatActivity() {
 

@@ -86,7 +86,15 @@ dependencies {
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
 
+    androidTestImplementation("org.mockito:mockito-core:4.8.0")
+    androidTestImplementation("androidx.test:runner:1.5.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    // Mockito dependencies for testing
+    testImplementation("org.mockito:mockito-core:4.8.0")
+    androidTestImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
 }
 

@@ -136,9 +136,9 @@ fun TrackListItem(track: Track) {
                 .padding(all = 10.dp)
                 .weight(weight = 1f)
         ) {
-
             Text(text = track.name, style = typography.h6, color = md_theme_dark_onSurface)
-            Text(text = track.artists[0].name, style = typography.caption, color = md_theme_dark_onSurface.copy(alpha = 0.6f))
+            Text(text = "Artist: ${track.artists[0].name}", style = typography.caption, color = md_theme_dark_onSurface.copy(alpha = 0.6f))
+            Text(text = "Release Date: ${track.album.release_date}", style = typography.caption, color = md_theme_dark_onSurface.copy(alpha = 0.6f))
         }
     }
 }
@@ -239,7 +239,7 @@ fun Preview_SearchResultActivity() {
                 Track(
                     name = "Yesterday",
                     artists = listOf(Artist(name = "Beatles", genres = listOf(), images = listOf())),
-                    album = Album(name = "Help!")
+                    album = Album(name = "Help!", release_date = "1965-08-06"),
                 )
             )
             ArtistListItem(
